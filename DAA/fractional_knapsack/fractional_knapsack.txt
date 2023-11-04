@@ -1,0 +1,40 @@
+def fractional_knapsack(items, capacity):
+    # Calculate the value-to-weight ratio for each item
+    for item in items:
+        item['value-to-weight'] = item['value'] / item['weight']
+
+    # Sort the items by the value-to-weight ratio in descending order
+    items.sort(key=lambda x: x['value-to-weight'], reverse=True)
+
+    total_value = 0
+    selected_items = []
+
+    for item in items:
+        if capacity >= item['weight']:
+            # Add the whole item to the knapsack
+            total_value += item['value']
+            selected_items.append(item)
+            capacity -= item['weight']
+        else:
+            # Add a fraction of the item to the knapsack
+            fraction = capacity / item['weight']
+            total_value += item['value'] * fraction
+            selected_items.append({'name': item['name'], 'weight': capacity, 'value': item['value'] * fraction})
+            break
+
+    return total_value, selected_items
+
+# Example usage:
+items = [
+    {'name': 'item1', 'weight': 10, 'value': 60},
+    {'name': 'item2', 'weight': 20, 'value': 100},
+    {'name': 'item3', 'weight': 30, 'value': 120},
+]
+
+capacity = 50
+
+max_value, selected_items = fractional_knapsack(items, capacity)
+print(f"Maximum value: {max_value}")
+print("Selected items:")
+for item in selected_items:
+    print(f"{item['name']} - Weight: {item['weight']}, Value: {item['value']}")
